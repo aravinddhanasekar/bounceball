@@ -1,30 +1,13 @@
 import pygame
-from random import randint
+from bounceballmod import *
+
 
 pygame.init()
-
-size = [600, 600]
 screen = pygame.display.set_mode(size)
 
-pink = (255, 255, 255)
-BLACK = (0,0,0)
-
-len_line = 80
-num_lines = 5
-
-coords = []
-for i in range(num_lines):
-	x1 = randint(0,500)
-	x2 = x1+len_line
-
-	y1 = randint(0,500)
-	y2 = y1
-
-	coord = [[x1,y1], [x2,y2]]
-	coords.append(coord)
-
-
+coords = generate_coords(num_lines, False)
 game_on = True
+
 while game_on:
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
@@ -33,6 +16,16 @@ while game_on:
 	screen.fill(pink)
 
 	for coord in coords:
+		#print(coord[0][1])
+		coord[0][1] -= 0.1
+		coord[1][1] -= 0.1
+
+		if coord[0][1] < 0:
+			coords.remove(coord)
+
+			coords.append(generate_coords(1, True)[0])
+			print(len(coords))
+
 		pygame.draw.aalines(screen, BLACK, False, coord)
 	
 	pygame.display.flip()
